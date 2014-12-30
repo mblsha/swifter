@@ -12,12 +12,14 @@ public enum HttpResponseBody {
     case XML(AnyObject)
     case PLIST(AnyObject)
     case HTML(String)
-    case RAW(String)
+    case RAW([String:String], String)
 
     func headers() -> [String:String] {
         switch self {
         case .JSON:
-            return ["Content-Type": "application/javascript; charset=utf-8"]
+            return ["Content-Type": "application/json; charset=utf-8"]
+        case .RAW(let headers, _):
+            return headers
         default:
             return [String:String]()
         }
@@ -46,7 +48,7 @@ public enum HttpResponseBody {
                 return "Serialisation error: \(serializationError)"
             }
             return "Invalid object to serialise."
-        case .RAW(let body):
+        case .RAW(_, let body):
             return body
         case .HTML(let body):
             return "<html><body>\(body)</body></html>"
