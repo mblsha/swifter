@@ -13,7 +13,16 @@ public enum HttpResponseBody {
     case PLIST(AnyObject)
     case HTML(String)
     case RAW(String)
-    
+
+    func headers() -> [String:String] {
+        switch self {
+        case .JSON:
+            return ["Content-Type": "application/javascript; charset=utf-8"]
+        default:
+            return [String:String]()
+        }
+    }
+
     func data() -> String? {
         switch self {
         case .JSON(let object):
@@ -52,7 +61,7 @@ public enum HttpResponse {
     case BadRequest, Unauthorized, Forbidden, NotFound
     case InternalServerError
     case RAW(Int, NSData)
-    
+
     func statusCode() -> Int {
         switch self {
         case .OK(_)                 : return 200
@@ -67,7 +76,7 @@ public enum HttpResponse {
         case .RAW(let code, _)      : return code
         }
     }
-    
+
     func reasonPhrase() -> String {
         switch self {
         case .OK(_)                 : return "OK"
@@ -82,9 +91,16 @@ public enum HttpResponse {
         case .RAW(_,_)              : return "Custom"
         }
     }
-    
+
     func headers() -> [String: String] {
         var headers = [String:String]()
+        switch self {
+        case .OK(let body):
+            for i in body.headers() ?? [String:String]() {
+              headers[i.0] = i.1
+            }
+        default: break
+        }
         headers["Server"] = "Swifter"
         switch self {
         case .MovedPermanently(let location) : headers["Location"] = location
@@ -92,7 +108,7 @@ public enum HttpResponse {
         }
         return headers
     }
-    
+
     func body() -> NSData? {
         switch self {
         case .OK(let body)      : return body.data()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
