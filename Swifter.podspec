@@ -8,6 +8,6 @@ Pod::Spec.new do |s|
 
   s.osx.deployment_target = "10.9"
   s.ios.deployment_target = "7.0"
-  s.source   = { :git => "https://github.com/glock45/swifter.git" }
-  s.source_files = "Common/*.swift"
+  # s.source   = { :git => "https://github.com/glock45/swifter.git" }
+  s.source_files = [ "Common/*.swift" ]
 end
