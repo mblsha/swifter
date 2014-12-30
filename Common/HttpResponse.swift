@@ -31,7 +31,7 @@ public enum HttpResponseBody {
                 if let json = NSJSONSerialization.dataWithJSONObject(object, options: NSJSONWritingOptions.PrettyPrinted, error: &serializationError) {
                     return NSString(data: json, encoding: NSUTF8StringEncoding)
                 }
-                return "Serialisation error: \(serializationError)"
+                return "Serialization error: \(serializationError)"
             }
             return "Invalid object to serialise."
         case .XML(let data):
