@@ -6,7 +6,7 @@
 
 import Foundation
 
-class HttpParser {
+public class HttpParser {
     
     func err(reason: String) -> NSError {
         return NSError(domain: "HttpParser", code: 0, userInfo: [NSLocalizedDescriptionKey : reason])

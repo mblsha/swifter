@@ -6,7 +6,7 @@
 
 import Foundation
 
-class HttpServer
+public class HttpServer
 {
     typealias Handler = HttpRequest -> HttpResponse
     
@@ -31,7 +31,7 @@ class HttpServer
         
     func routes() -> [String] { return map(handlers, { $0.0.pattern }) }
     
-    func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
+    public func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
         releaseAcceptSocket()
         if let socket = Socket.tcpForListen(port: listenPort, error: error) {
             acceptSocket = socket

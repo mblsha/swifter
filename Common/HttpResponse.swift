@@ -6,8 +6,8 @@
 
 import Foundation
 
-enum HttpResponseBody {
-    
+public enum HttpResponseBody {
+
     case JSON(AnyObject)
     case XML(AnyObject)
     case PLIST(AnyObject)
@@ -45,8 +45,8 @@ enum HttpResponseBody {
     }
 }
 
-enum HttpResponse {
-    
+public enum HttpResponse {
+
     case OK(HttpResponseBody), Created, Accepted
     case MovedPermanently(String)
     case BadRequest, Unauthorized, Forbidden, NotFound
