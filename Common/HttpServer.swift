@@ -8,15 +8,15 @@ import Foundation
 
 public class HttpServer
 {
-    typealias Handler = HttpRequest -> HttpResponse
-    
+    public typealias Handler = HttpRequest -> HttpResponse
+
     var handlers: [(expression: NSRegularExpression, handler: Handler)] = []
     var acceptSocket: CInt = -1
-    
+
     let matchingOptions = NSMatchingOptions(0)
     let expressionOptions = NSRegularExpressionOptions(0)
-    
-    subscript (path: String) -> Handler? {
+
+    public subscript (path: String) -> Handler? {
         get {
             return nil
         }
@@ -28,9 +28,12 @@ public class HttpServer
             }
         }
     }
-        
-    func routes() -> [String] { return map(handlers, { $0.0.pattern }) }
-    
+
+    public func routes() -> [String] { return map(handlers, { $0.0.pattern }) }
+
+    public init() {
+    }
+
     public func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
         releaseAcceptSocket()
         if let socket = Socket.tcpForListen(port: listenPort, error: error) {
@@ -59,13 +62,13 @@ public class HttpServer
         }
         return false
     }
-    
+
     func findHandler(url:String) -> (NSRegularExpression, Handler)? {
         return filter(self.handlers, {
             $0.0.numberOfMatchesInString(url, options: self.matchingOptions, range: HttpServer.asciiRange(url)) > 0
         }).first
     }
-    
+
     func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
         var capturedGroups = [String]()
         if let result = expression.firstMatchInString(value, options: matchingOptions, range: HttpServer.asciiRange(value)) {
@@ -78,11 +81,11 @@ public class HttpServer
         }
         return capturedGroups
     }
-    
+
     class func asciiRange(value: String) -> NSRange {
         return NSMakeRange(0, value.lengthOfBytesUsingEncoding(NSASCIIStringEncoding))
     }
-    
+
     class func writeResponse(socket: CInt, response: HttpResponse, keepAlive: Bool) {
         Socket.writeStringUTF8(socket, string: "HTTP/1.1 \(response.statusCode()) \(response.reasonPhrase())\r\n")
         if let body = response.body() {
@@ -101,11 +104,11 @@ public class HttpServer
             Socket.writeData(socket, data: body)
         }
     }
-    
-    func stop() {
+
+    public func stop() {
         releaseAcceptSocket()
     }
-    
+
     func releaseAcceptSocket() {
         if ( acceptSocket != -1 ) {
             Socket.release(acceptSocket)
