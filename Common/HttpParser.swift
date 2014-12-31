@@ -7,11 +7,11 @@
 import Foundation
 
 public class HttpParser {
-    
+
     func err(reason: String) -> NSError {
         return NSError(domain: "HttpParser", code: 0, userInfo: [NSLocalizedDescriptionKey : reason])
     }
-    
+
     func nextHttpRequest(socket: CInt, error:NSErrorPointer = nil) -> HttpRequest? {
         if let statusLine = nextLine(socket, error: error) {
             let statusTokens = split(statusLine, { $0 == " " })
@@ -37,7 +37,7 @@ public class HttpParser {
         }
         return nil
     }
-    
+
     private func extractUrlParams(url: String) -> [(String, String)] {
         if let query = split(url, { $0 == "?" }).last {
             return map(split(query, { $0 == "&" }), { (param:String) -> (String, String) in
@@ -52,7 +52,7 @@ public class HttpParser {
         }
         return []
     }
-    
+
     private func nextBody(socket: CInt, size: Int , error:NSErrorPointer) -> String? {
         var body = ""
         var counter = 0;
@@ -67,7 +67,7 @@ public class HttpParser {
         }
         return body
     }
-    
+
     private func nextHeaders(socket: CInt, error:NSErrorPointer) -> Dictionary<String, String>? {
         var headers = Dictionary<String, String>()
         while let headerLine = nextLine(socket, error: error) {
@@ -95,7 +95,7 @@ public class HttpParser {
         if next <= 0 { return next }
         return Int(buffer[0])
     }
-    
+
     private func nextLine(socket: CInt, error:NSErrorPointer) -> String? {
         var characters: String = ""
         var n = 0
@@ -109,7 +109,7 @@ public class HttpParser {
         }
         return characters
     }
-    
+
     func supportsKeepAlive(headers: Dictionary<String, String>) -> Bool {
         if let value = headers["connection"] {
             return "keep-alive" == value.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet()).lowercaseString

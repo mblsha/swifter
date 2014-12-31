@@ -9,7 +9,7 @@ import Foundation
 /* Low level routines for POSIX sockets */
 
 struct Socket {
-        
+
     static func lastErr(reason: String) -> NSError {
         let errorCode = errno
         if let errorText = String.fromCString(UnsafePointer(strerror(errorCode))) {
@@ -17,7 +17,7 @@ struct Socket {
         }
         return NSError(domain: "SOCKET", code: Int(errorCode), userInfo: nil)
     }
-    
+
     static func tcpForListen(port: in_port_t = 8080, error:NSErrorPointer = nil) -> CInt? {
         let s = socket(AF_INET, SOCK_STREAM, 0)
         if ( s == -1 ) {
@@ -33,7 +33,7 @@ struct Socket {
         nosigpipe(s)
         var addr = sockaddr_in(sin_len: __uint8_t(sizeof(sockaddr_in)), sin_family: sa_family_t(AF_INET),
             sin_port: port_htons(port), sin_addr: in_addr(s_addr: inet_addr("0.0.0.0")), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
-        
+
         var sock_addr = sockaddr(sa_len: 0, sa_family: 0, sa_data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         memcpy(&sock_addr, &addr, UInt(sizeof(sockaddr_in)))
         if ( bind(s, &sock_addr, socklen_t(sizeof(sockaddr_in))) == -1 ) {
@@ -48,21 +48,21 @@ struct Socket {
         }
         return s
     }
-    
+
     static func writeStringUTF8(socket: CInt, string: String, error: NSErrorPointer = nil) -> Bool {
         if let nsdata = string.dataUsingEncoding(NSUTF8StringEncoding) {
             writeData(socket, data: nsdata, error: error)
         }
         return true
     }
-    
+
     static func writeStringASCII(socket: CInt, string: String, error: NSErrorPointer = nil) -> Bool {
         if let nsdata = string.dataUsingEncoding(NSASCIIStringEncoding) {
             writeData(socket, data: nsdata, error: error)
         }
         return true
     }
-    
+
     static func writeData(socket: CInt, data: NSData, error:NSErrorPointer = nil) -> Bool {
         var sent = 0
         let unsafePointer = UnsafePointer<UInt8>(data.bytes)
@@ -76,7 +76,7 @@ struct Socket {
         }
         return true
     }
-    
+
     static func acceptClientSocket(socket: CInt, error:NSErrorPointer = nil) -> CInt? {
         var addr = sockaddr(sa_len: 0, sa_family: 0, sa_data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)), len: socklen_t = 0
         let clientSocket = accept(socket, &addr, &len)
@@ -87,18 +87,18 @@ struct Socket {
         if error != nil { error.memory = lastErr("accept(...) failed.") }
         return nil
     }
-    
+
     static func nosigpipe(socket: CInt) {
         // prevents crashes when blocking calls are pending and the app is paused ( via Home button )
         var no_sig_pipe: Int32 = 1;
         setsockopt(socket, SOL_SOCKET, SO_NOSIGPIPE, &no_sig_pipe, socklen_t(sizeof(Int32)));
     }
-    
+
     static func port_htons(port: in_port_t) -> in_port_t {
         let isLittleEndian = Int(OSHostByteOrder()) == OSLittleEndian
         return isLittleEndian ? _OSSwapInt16(port) : port
     }
-    
+
     static func release(socket: CInt) {
         shutdown(socket, SHUT_RDWR)
         close(socket)
