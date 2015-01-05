@@ -107,6 +107,23 @@ class HttpParserTests: XCTestCase {
       httpRequestText("GET /foo2", ["Foo: Bar"], optionalBodyText: "Data"),
       httpRequestText("GET /foo3", ["Foo: Bar"])
       ])).count, 3)
+
+    XCTAssertEqual(httpRequests(mockReader([
+      httpRequestText("GET /foo1/пыщ", ["Пыщ: Тыц"]),
+      httpRequestText("GET /foo2/пыщ", ["Пыщ: Тыц"], optionalBodyText: "Бдыщ"),
+      httpRequestText("GET /foo3/пыщ", ["Пыщ: Тыц"])
+      ])).count, 3)
+
+    let asciiRequest = httpRequests(mockReader([
+      httpRequestText("GET /foo2/bar?a=b1&a=b2&v=g",
+        ["Foo: Bar"], optionalBodyText: "Thedata")])).first!
+    XCTAssertEqual(asciiRequest.url, "/foo2/bar?a=b1&a=b2&v=g")
+    XCTAssertEqual(asciiRequest.param("v")!, "g")
+    XCTAssertEqual(asciiRequest.params("a"), ["b1", "b2"])
+    XCTAssertEqual(asciiRequest.method, "GET")
+    XCTAssertEqual(asciiRequest.headers["foo"]!, "Bar")
+    XCTAssertEqual(asciiRequest.headers["content-length"]!, "7")
+    XCTAssertEqual(asciiRequest.body!, "Thedata")
   }
 
   func httpRequests(socket: SocketReader) -> [HttpRequest] {
