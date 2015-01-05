@@ -22,18 +22,29 @@ class SocketReader {
     return Int(buffer[0])
   }
 
-  func nextLine(error: NSErrorPointer) -> String? {
+  func nextRawLine(error: NSErrorPointer) -> NSData? {
+    var result = NSMutableData(length: 0)!
     var characters: String = ""
     var n = 0
     do {
       n = nextUInt8()
-      if ( n > 13 /* CR */ ) { characters.append(Character(UnicodeScalar(n))) }
+      if ( n > 13 /* CR */ ) {
+        result.appendBytes(&n, length: 1)
+      }
     } while ( n > 0 && n != 10 /* NL */)
     if ( n == -1 && characters.isEmpty ) {
       if error != nil { error.memory = Socket.lastErr("recv(...) failed.") }
       return nil
     }
-    return characters
+    return result
+  }
+
+  func nextLine(error: NSErrorPointer) -> String? {
+    if let data = nextRawLine(error) {
+      return NSString(data: data, encoding: NSUTF8StringEncoding)!
+    } else {
+      return nil
+    }
   }
 }
 
