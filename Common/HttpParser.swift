@@ -12,8 +12,8 @@ public class HttpParser {
         return NSError(domain: "HttpParser", code: 0, userInfo: [NSLocalizedDescriptionKey : reason])
     }
 
-    func nextHttpRequest(socket: CInt, error:NSErrorPointer = nil) -> HttpRequest? {
-        if let statusLine = nextLine(socket, error: error) {
+    func nextHttpRequest(socket: SocketReader, error:NSErrorPointer = nil) -> HttpRequest? {
+        if let statusLine = socket.nextLine(error) {
             let statusTokens = split(statusLine, { $0 == " " })
             println(statusTokens)
             if ( statusTokens.count < 3 ) {
@@ -56,11 +56,11 @@ public class HttpParser {
         return []
     }
 
-    private func nextBody(socket: CInt, size: Int , error:NSErrorPointer) -> String? {
+    private func nextBody(socket: SocketReader, size: Int , error:NSErrorPointer) -> String? {
         var body = ""
         var counter = 0;
         while ( counter < size ) {
-            let c = nextUInt8(socket)
+            let c = socket.nextUInt8()
             if ( c < 0 ) {
                 if error != nil { error.memory = err("IO error while reading body") }
                 return nil
@@ -71,9 +71,9 @@ public class HttpParser {
         return body
     }
 
-    private func nextHeaders(socket: CInt, error:NSErrorPointer) -> Dictionary<String, String>? {
+    private func nextHeaders(socket: SocketReader, error:NSErrorPointer) -> Dictionary<String, String>? {
         var headers = Dictionary<String, String>()
-        while let headerLine = nextLine(socket, error: error) {
+        while let headerLine = socket.nextLine(error) {
             if ( headerLine.isEmpty ) {
                 return headers
             }
@@ -90,27 +90,6 @@ public class HttpParser {
             }
         }
         return nil
-    }
-
-    private func nextUInt8(socket: CInt) -> Int {
-        var buffer = [UInt8](count: 1, repeatedValue: 0);
-        let next = recv(socket, &buffer, UInt(buffer.count), 0)
-        if next <= 0 { return next }
-        return Int(buffer[0])
-    }
-
-    private func nextLine(socket: CInt, error:NSErrorPointer) -> String? {
-        var characters: String = ""
-        var n = 0
-        do {
-            n = nextUInt8(socket)
-            if ( n > 13 /* CR */ ) { characters.append(Character(UnicodeScalar(n))) }
-        } while ( n > 0 && n != 10 /* NL */)
-        if ( n == -1 && characters.isEmpty ) {
-            if error != nil { error.memory = Socket.lastErr("recv(...) failed.") }
-            return nil
-        }
-        return characters
     }
 
     func supportsKeepAlive(headers: Dictionary<String, String>) -> Bool {

@@ -42,7 +42,8 @@ public class HttpServer
                 while let socket = Socket.acceptClientSocket(self.acceptSocket) {
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
                         let parser = HttpParser()
-                        while let request = parser.nextHttpRequest(socket) {
+                        let socketReader = SocketReader(socket: socket)
+                        while let request = parser.nextHttpRequest(socketReader) {
                             let keepAlive = parser.supportsKeepAlive(request.headers)
                             if let (expression, handler) = self.findHandler(request.url) {
                                 let capturedUrlsGroups = self.captureExpressionGroups(expression, value: request.url)
