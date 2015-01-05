@@ -58,6 +58,28 @@ func ==(lhs: Params, rhs: Params) -> Bool {
   return true
 }
 
+func httpRequestText(statusLine: String, headerLines: [String], optionalBodyText: String? = nil) -> String {
+  let prefix = "\(statusLine) HTTP/1.1\r\n" +
+               join("\r\n", headerLines)
+  let bodySeparator = "\r\n\r\n"
+
+  if let bodyText = optionalBodyText {
+    let data = bodyText.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+    return prefix +
+           "\r\n" +
+           "Content-Length: \(data.length)" +
+           bodySeparator +
+           bodyText
+  } else {
+    return prefix +
+           bodySeparator
+  }
+}
+
+func mockReader(requests: [String]) -> MockSocketReader {
+  return MockSocketReader(data: join("", requests))
+}
+
 class HttpParserTests: XCTestCase {
   func testExtractUrlParams() {
     XCTAssertEqual(Params(url: "/rest/auth/1/session"), Params())
@@ -65,5 +87,34 @@ class HttpParserTests: XCTestCase {
     XCTAssertEqual(Params(url: "/rest/auth/1/session?foo=bar&foo=bar2"), Params([("foo", "bar"), ("foo", "bar2")]))
 
     XCTAssertEqual(Params(url: "/rest/auth/1/session?foo=%22b%20ar%22"), Params([("foo", "\"b ar\"")]))
+  }
+
+  func testHttpRequestTextHelper() {
+    XCTAssertEqual(
+      httpRequestText("GET /foo", ["Foo: Bar"]),
+      "GET /foo HTTP/1.1\r\nFoo: Bar\r\n\r\n")
+    XCTAssertEqual(
+      httpRequestText("GET /foo", ["Foo: Bar", "Bar: Baz"]),
+      "GET /foo HTTP/1.1\r\nFoo: Bar\r\nBar: Baz\r\n\r\n")
+    XCTAssertEqual(
+      httpRequestText("GET /foo", ["Foo: Bar", "Bar: Baz"], optionalBodyText: "The Data"),
+      "GET /foo HTTP/1.1\r\nFoo: Bar\r\nBar: Baz\r\nContent-Length: 8\r\n\r\nThe Data")
+  }
+
+  func testUrlRequest() {
+    XCTAssertEqual(httpRequests(mockReader([
+      httpRequestText("GET /foo1", ["Foo: Bar"]),
+      httpRequestText("GET /foo2", ["Foo: Bar"], optionalBodyText: "Data"),
+      httpRequestText("GET /foo3", ["Foo: Bar"])
+      ])).count, 3)
+  }
+
+  func httpRequests(socket: SocketReader) -> [HttpRequest] {
+    var result: [HttpRequest] = []
+    let parser = HttpParser()
+    while let request = parser.nextHttpRequest(socket) {
+      result.append(request)
+    }
+    return result
   }
 }

@@ -8,16 +8,16 @@
 
 import Foundation
 
-struct SocketReader {
-  private let socket: CInt
+class SocketReader {
+  private let socket: CInt?
 
-  init(socket: CInt) {
+  init(socket: CInt?) {
     self.socket = socket
   }
 
   func nextUInt8() -> Int {
     var buffer = [UInt8](count: 1, repeatedValue: 0);
-    let next = recv(socket, &buffer, UInt(buffer.count), 0)
+    let next = recv(socket!, &buffer, UInt(buffer.count), 0)
     if next <= 0 { return next }
     return Int(buffer[0])
   }
@@ -34,5 +34,24 @@ struct SocketReader {
       return nil
     }
     return characters
+  }
+}
+
+class MockSocketReader: SocketReader {
+  private let bytes: UnsafePointer<UInt8>
+  private let data: NSData
+  private var offset: Int = 0
+
+  init(data: String) {
+    self.data = data.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)!
+    self.bytes = UnsafePointer<UInt8>(self.data.bytes)
+    super.init(socket: nil)
+  }
+
+  override func nextUInt8() -> Int {
+    if offset < data.length {
+      return Int(bytes[offset++])
+    }
+    return -1
   }
 }
