@@ -7,6 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		797D66451A55584C0029671A /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4815A19A2F6A60030B30D /* HttpRequest.swift */; };
+		797D66461A55584C0029671A /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814A19A2EED00030B30D /* HttpParser.swift */; };
+		797D66471A55584C0029671A /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814B19A2EED00030B30D /* HttpResponse.swift */; };
+		797D66481A55584C0029671A /* HttpHandlers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CB102D91A1664B200CBA3B4 /* HttpHandlers.swift */; };
+		797D66491A55584C0029671A /* HttpServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814C19A2EED00030B30D /* HttpServer.swift */; };
+		797D664A1A55584C0029671A /* Socket.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814D19A2EED00030B30D /* Socket.swift */; };
+		797D664B1A5558AC0029671A /* HttpParserTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 797D661A1A5554BA0029671A /* HttpParserTests.swift */; };
 		7C6A510E1A149859004924B5 /* SwifterActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6A510D1A149859004924B5 /* SwifterActiveRecord.swift */; };
 		7C6A510F1A149859004924B5 /* SwifterActiveRecord.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C6A510D1A149859004924B5 /* SwifterActiveRecord.swift */; };
 		7C71C5B01A1D52F800682BF0 /* login.html in CopyFiles */ = {isa = PBXBuildFile; fileRef = 98630C061A1C9A9D00478D08 /* login.html */; };
@@ -42,6 +49,16 @@
 		98630C071A1C9A9D00478D08 /* login.html in Resources */ = {isa = PBXBuildFile; fileRef = 98630C061A1C9A9D00478D08 /* login.html */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		797D66401A5557FA0029671A /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 7C839B6619422CFF003A6950 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 7C839B6D19422CFF003A6950;
+			remoteInfo = Swifter;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXCopyFilesBuildPhase section */
 		7CA4813919A2EA8D0030B30D /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -58,6 +75,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		797D66191A5554BA0029671A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		797D661A1A5554BA0029671A /* HttpParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpParserTests.swift; sourceTree = "<group>"; };
+		797D663A1A5557FA0029671A /* SwifterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwifterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C6A510D1A149859004924B5 /* SwifterActiveRecord.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SwifterActiveRecord.swift; sourceTree = "<group>"; };
 		7C839B6E19422CFF003A6950 /* Swifter.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Swifter.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7C839B7219422CFF003A6950 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -86,6 +106,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		797D66371A5557FA0029671A /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C839B6B19422CFF003A6950 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -105,6 +132,23 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		797D66171A5554BA0029671A /* SwifterTests */ = {
+			isa = PBXGroup;
+			children = (
+				797D661A1A5554BA0029671A /* HttpParserTests.swift */,
+				797D66181A5554BA0029671A /* Supporting Files */,
+			);
+			path = SwifterTests;
+			sourceTree = "<group>";
+		};
+		797D66181A5554BA0029671A /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				797D66191A5554BA0029671A /* Info.plist */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
 		7C6A510C1A149843004924B5 /* ActiveRecord */ = {
 			isa = PBXGroup;
 			children = (
@@ -126,6 +170,7 @@
 				7CA4814919A2EED00030B30D /* Common */,
 				7C839B7019422CFF003A6950 /* Swifter */,
 				7CA4813C19A2EA8D0030B30D /* SwifterOSX */,
+				797D66171A5554BA0029671A /* SwifterTests */,
 				7C839B6F19422CFF003A6950 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -135,6 +180,7 @@
 			children = (
 				7C839B6E19422CFF003A6950 /* Swifter.app */,
 				7CA4813B19A2EA8D0030B30D /* SwifterOSX */,
+				797D663A1A5557FA0029671A /* SwifterTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -195,6 +241,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		797D66391A5557FA0029671A /* SwifterTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 797D66421A5557FA0029671A /* Build configuration list for PBXNativeTarget "SwifterTests" */;
+			buildPhases = (
+				797D66361A5557FA0029671A /* Sources */,
+				797D66371A5557FA0029671A /* Frameworks */,
+				797D66381A5557FA0029671A /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				797D66411A5557FA0029671A /* PBXTargetDependency */,
+			);
+			name = SwifterTests;
+			productName = SwifterTests;
+			productReference = 797D663A1A5557FA0029671A /* SwifterTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		7C839B6D19422CFF003A6950 /* Swifter */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 7C839B8A19422D00003A6950 /* Build configuration list for PBXNativeTarget "Swifter" */;
@@ -238,6 +302,10 @@
 				LastUpgradeCheck = 0600;
 				ORGANIZATIONNAME = "Damian Kołakowski";
 				TargetAttributes = {
+					797D66391A5557FA0029671A = {
+						CreatedOnToolsVersion = 6.1.1;
+						TestTargetID = 7C839B6D19422CFF003A6950;
+					};
 					7C839B6D19422CFF003A6950 = {
 						CreatedOnToolsVersion = 6.0;
 					};
@@ -261,11 +329,19 @@
 			targets = (
 				7C839B6D19422CFF003A6950 /* Swifter */,
 				7CA4813A19A2EA8D0030B30D /* SwifterOSX */,
+				797D66391A5557FA0029671A /* SwifterTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		797D66381A5557FA0029671A /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C839B6C19422CFF003A6950 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -281,6 +357,20 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		797D66361A5557FA0029671A /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				797D66471A55584C0029671A /* HttpResponse.swift in Sources */,
+				797D66461A55584C0029671A /* HttpParser.swift in Sources */,
+				797D664A1A55584C0029671A /* Socket.swift in Sources */,
+				797D664B1A5558AC0029671A /* HttpParserTests.swift in Sources */,
+				797D66491A55584C0029671A /* HttpServer.swift in Sources */,
+				797D66481A55584C0029671A /* HttpHandlers.swift in Sources */,
+				797D66451A55584C0029671A /* HttpRequest.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		7C839B6A19422CFF003A6950 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -320,6 +410,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		797D66411A5557FA0029671A /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 7C839B6D19422CFF003A6950 /* Swifter */;
+			targetProxy = 797D66401A5557FA0029671A /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		7C839B7719422CFF003A6950 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -332,6 +430,44 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		797D66431A5557FA0029671A /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SwifterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = YES;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swifter.app/Swifter";
+			};
+			name = Debug;
+		};
+		797D66441A5557FA0029671A /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(SDKROOT)/Developer/Library/Frameworks",
+					"$(inherited)",
+				);
+				INFOPLIST_FILE = SwifterTests/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 8.1;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MTL_ENABLE_DEBUG_INFO = NO;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Swifter.app/Swifter";
+			};
+			name = Release;
+		};
 		7C839B8819422D00003A6950 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -475,6 +611,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		797D66421A5557FA0029671A /* Build configuration list for PBXNativeTarget "SwifterTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				797D66431A5557FA0029671A /* Debug */,
+				797D66441A5557FA0029671A /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		7C839B6919422CFF003A6950 /* Build configuration list for PBXProject "Swifter" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

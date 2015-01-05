@@ -22,7 +22,7 @@ public class HttpParser {
             }
             let method = statusTokens[0]
             let path = statusTokens[1]
-            let urlParams = extractUrlParams(path)
+            let urlParams = HttpParser.extractUrlParams(path)
             // TODO extract query parameters
             if let headers = nextHeaders(socket, error: error) {
                 // TODO detect content-type and handle:
@@ -38,7 +38,10 @@ public class HttpParser {
         return nil
     }
 
-    private func extractUrlParams(url: String) -> [(String, String)] {
+    class func extractUrlParams(url: String) -> [(String, String)] {
+        if url.rangeOfCharacterFromSet(NSCharacterSet(charactersInString: "?")) == nil {
+            return []
+        }
         if let query = split(url, { $0 == "?" }).last {
             return map(split(query, { $0 == "&" }), { (param:String) -> (String, String) in
                 let tokens = split(param, { $0 == "=" })
