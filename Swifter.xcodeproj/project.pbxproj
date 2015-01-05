@@ -79,6 +79,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		7906A47A1A5AB5C000F6471E /* Swifter.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Swifter.podspec; sourceTree = "<group>"; };
 		797D66191A5554BA0029671A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		797D661A1A5554BA0029671A /* HttpParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpParserTests.swift; sourceTree = "<group>"; };
 		797D663A1A5557FA0029671A /* SwifterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwifterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -171,6 +172,7 @@
 		7C839B6519422CFF003A6950 = {
 			isa = PBXGroup;
 			children = (
+				7906A47A1A5AB5C000F6471E /* Swifter.podspec */,
 				7C8B260D1A23879500566475 /* libsqlite3.dylib */,
 				7C8B260B1A23878F00566475 /* libsqlite3.dylib */,
 				7CA4815619A2EF2B0030B30D /* Resources */,
