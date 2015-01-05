@@ -59,7 +59,7 @@ public func demoServer(publicDir: String?) -> HttpServer {
                 }
                 break;
             case "POST":
-                if let body = request.body {
+                if let body = request.bodyUtf8 {
                     return .OK(.HTML(body))
                 } else {
                     return .OK(.HTML("No POST params."))

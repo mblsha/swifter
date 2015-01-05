@@ -15,6 +15,12 @@ class SocketReader {
     self.socket = socket
   }
 
+  class func err(reason: String) -> NSError {
+    return NSError(domain: "SocketReader", code: 0, userInfo: [NSLocalizedDescriptionKey : reason])
+  }
+
+  // result >= when everything's fine
+  // result == -1 on error
   func nextUInt8() -> Int {
     var buffer = [UInt8](count: 1, repeatedValue: 0);
     let next = recv(socket!, &buffer, UInt(buffer.count), 0)
@@ -37,6 +43,33 @@ class SocketReader {
       return nil
     }
     return result
+  }
+
+  func nextData(size: Int , error: NSErrorPointer) -> NSData? {
+    var bytes = UnsafeMutablePointer<UInt8>.alloc(size)
+    var success = true
+    var counter = 0;
+
+    while counter < size {
+      var c = nextUInt8()
+      if c < 0 {
+        if error != nil {
+          error.memory = SocketReader.err("IO error while reading body")
+        }
+        success = false
+        break
+      }
+      bytes[counter++] = UInt8(c)
+    }
+
+    if success {
+      let result = NSData(bytes: bytes, length: size)
+      free(bytes)
+      return result
+    } else {
+      free(bytes)
+      return nil
+    }
   }
 
   func nextLine(error: NSErrorPointer) -> String? {

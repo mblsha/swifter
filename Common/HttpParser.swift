@@ -8,16 +8,12 @@ import Foundation
 
 public class HttpParser {
 
-    func err(reason: String) -> NSError {
-        return NSError(domain: "HttpParser", code: 0, userInfo: [NSLocalizedDescriptionKey : reason])
-    }
-
     func nextHttpRequest(socket: SocketReader, error:NSErrorPointer = nil) -> HttpRequest? {
         if let statusLine = socket.nextLine(error) {
             let statusTokens = split(statusLine, { $0 == " " })
             println(statusTokens)
             if ( statusTokens.count < 3 ) {
-                if error != nil { error.memory = err("Invalid status line: \(statusLine)") }
+                if error != nil { error.memory = SocketReader.err("Invalid status line: \(statusLine)") }
                 return nil
             }
             let method = statusTokens[0]
@@ -29,7 +25,7 @@ public class HttpParser {
                 // 'application/x-www-form-urlencoded' -> Dictionary
                 // 'multipart' -> Dictionary
                 if let contentSize = headers["content-length"]?.toInt() {
-                    let body = nextBody(socket, size: contentSize, error: error)
+                    let body = socket.nextData(contentSize, error: error)
                     return HttpRequest(url: path, urlParams: urlParams, method: method, headers: headers, body: body, capturedUrlGroups: [])
                 }
                 return HttpRequest(url: path, urlParams: urlParams, method: method, headers: headers, body: nil, capturedUrlGroups: [])
@@ -54,21 +50,6 @@ public class HttpParser {
             })
         }
         return []
-    }
-
-    private func nextBody(socket: SocketReader, size: Int , error:NSErrorPointer) -> String? {
-        var body = ""
-        var counter = 0;
-        while ( counter < size ) {
-            let c = socket.nextUInt8()
-            if ( c < 0 ) {
-                if error != nil { error.memory = err("IO error while reading body") }
-                return nil
-            }
-            body.append(UnicodeScalar(c))
-            counter++;
-        }
-        return body
     }
 
     private func nextHeaders(socket: SocketReader, error:NSErrorPointer) -> Dictionary<String, String>? {

@@ -11,8 +11,17 @@ public struct HttpRequest {
     public let urlParams: [(String, String)] // http://stackoverflow.com/questions/1746507/authoritative-position-of-duplicate-http-get-query-keys
     public let method: String
     public let headers: [String: String]
-    public let body: String?
+    public let body: NSData?
     public let capturedUrlGroups: [String]
+
+    public var bodyUtf8: String? {
+      get {
+        if let data = body {
+          return NSString(data: data, encoding: NSUTF8StringEncoding)
+        }
+        return nil
+      }
+    }
 
     public func params(name: String) -> [String] {
       return reduce(urlParams, []) {
