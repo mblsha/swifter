@@ -30,8 +30,10 @@ public enum HttpResponseBody {
         case .JSON(let object):
             if NSJSONSerialization.isValidJSONObject(object) {
                 var serializationError: NSError?
-                if let json = NSJSONSerialization.dataWithJSONObject(object, options: NSJSONWritingOptions.PrettyPrinted, error: &serializationError) {
-                    return NSString(data: json, encoding: NSUTF8StringEncoding)
+                if let json = NSJSONSerialization.dataWithJSONObject(object, options: NSJSONWritingOptions(), error: &serializationError) {
+                    if let string = NSString(data: json, encoding: NSUTF8StringEncoding) {
+                        return string.stringByReplacingOccurrencesOfString("\\/", withString: "/")
+                    }
                 }
                 return "Serialization error: \(serializationError)"
             }
