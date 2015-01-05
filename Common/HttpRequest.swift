@@ -12,7 +12,7 @@ public struct HttpRequest {
     public let method: String
     public let headers: [String: String]
     public let body: String?
-    public var capturedUrlGroups: [String]
+    public let capturedUrlGroups: [String]
 
     public func params(name: String) -> [String] {
       return reduce(urlParams, []) {
