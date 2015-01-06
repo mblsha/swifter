@@ -11,7 +11,7 @@ import XCTest
 
 class HttpResponseTests: XCTestCase {
   func testHttpResponseBodyJson() {
-    XCTAssertEqual(HttpResponseBody.JSON(["foo": "bar"]).data()!, "{\"foo\":\"bar\"}")
-    XCTAssertEqual(HttpResponseBody.JSON(["foo": "b/a/r"]).data()!, "{\"foo\":\"b/a/r\"}")
+    XCTAssertEqual(HttpResponseBody.JSON(["foo": "bar"]).dataString()!, "{\"foo\":\"bar\"}")
+    XCTAssertEqual(HttpResponseBody.JSON(["foo": "b/a/r"]).dataString()!, "{\"foo\":\"b/a/r\"}")
   }
 }

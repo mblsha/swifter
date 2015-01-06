@@ -12,7 +12,7 @@ public enum HttpResponseBody {
     case XML(AnyObject)
     case PLIST(AnyObject)
     case HTML(String)
-    case RAW([String:AnyObject], String)
+    case RAW([String:AnyObject], NSData?)
 
     func headers() -> [String:AnyObject] {
         switch self {
@@ -25,7 +25,7 @@ public enum HttpResponseBody {
         }
     }
 
-    func data() -> String? {
+    func dataString() -> String? {
         switch self {
         case .JSON(let object):
             if NSJSONSerialization.isValidJSONObject(object) {
@@ -50,11 +50,21 @@ public enum HttpResponseBody {
                 return "Serialisation error: \(serializationError)"
             }
             return "Invalid object to serialise."
-        case .RAW(_, let body):
-            return body
+        case .RAW(_, _):
+            fatalError("Use data() for .RAW HttpResponse")
+            return nil
         case .HTML(let body):
             return "<html><body>\(body)</body></html>"
         }
+    }
+
+    func data() -> NSData? {
+      switch self {
+      case .RAW(_, let body):
+        return body
+      default:
+        return dataString()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+      }
     }
 }
 
@@ -122,8 +132,8 @@ public enum HttpResponse {
 
     func body() -> NSData? {
         switch self {
-        case .OK(let body)      : return body.data()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
-        case .Custom(_,let body): return body.data()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        case .OK(let body)      : return body.data()
+        case .Custom(_,let body): return body.data()
         case .RAW(_, let data)  : return data
         default                 : return nil
         }
