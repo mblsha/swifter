@@ -11,7 +11,6 @@ public class HttpParser {
     func nextHttpRequest(socket: SocketReader, error:NSErrorPointer = nil) -> HttpRequest? {
         if let statusLine = socket.nextLine(error) {
             let statusTokens = split(statusLine, { $0 == " " })
-            println(statusTokens)
             if ( statusTokens.count < 3 ) {
                 if error != nil { error.memory = SocketReader.err("Invalid status line: \(statusLine)") }
                 return nil
