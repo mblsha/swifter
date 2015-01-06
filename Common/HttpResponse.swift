@@ -12,9 +12,9 @@ public enum HttpResponseBody {
     case XML(AnyObject)
     case PLIST(AnyObject)
     case HTML(String)
-    case RAW([String:String], String)
+    case RAW([String:AnyObject], String)
 
-    func headers() -> [String:String] {
+    func headers() -> [String:AnyObject] {
         switch self {
         case .JSON:
             return ["Content-Type": "application/json; charset=utf-8"]
@@ -64,6 +64,7 @@ public enum HttpResponse {
     case MovedPermanently(String)
     case BadRequest, Unauthorized, Forbidden, NotFound
     case InternalServerError
+    case Custom(Int, HttpResponseBody)
     case RAW(Int, NSData)
 
     func statusCode() -> Int {
@@ -77,6 +78,7 @@ public enum HttpResponse {
         case .Forbidden             : return 403
         case .NotFound              : return 404
         case .InternalServerError   : return 500
+        case .Custom(let code, _)   : return code
         case .RAW(let code, _)      : return code
         }
     }
@@ -92,17 +94,22 @@ public enum HttpResponse {
         case .Forbidden             : return "Forbidden"
         case .NotFound              : return "Not Found"
         case .InternalServerError   : return "Internal Server Error"
+        case .Custom(_,_)           : return "Custom"
         case .RAW(_,_)              : return "Custom"
         }
     }
 
-    func headers() -> [String: String] {
-        var headers = [String:String]()
+    func headers() -> [String: AnyObject] {
+        var headers = [String: AnyObject]()
         switch self {
         case .OK(let body):
-            for i in body.headers() ?? [String:String]() {
+            for i in body.headers() ?? [String: AnyObject]() {
               headers[i.0] = i.1
             }
+        case .Custom(_, let body):
+          for i in body.headers() ?? [String: AnyObject]() {
+            headers[i.0] = i.1
+          }
         default: break
         }
         headers["Server"] = "Swifter"
@@ -116,6 +123,7 @@ public enum HttpResponse {
     func body() -> NSData? {
         switch self {
         case .OK(let body)      : return body.data()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
+        case .Custom(_,let body): return body.data()?.dataUsingEncoding(NSUTF8StringEncoding, allowLossyConversion: false)
         case .RAW(_, let data)  : return data
         default                 : return nil
         }
