@@ -34,9 +34,9 @@ public class HttpServer
     public init() {
     }
 
-    public func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil) -> Bool {
+    public func start(listenPort: in_port_t = 8080, error: NSErrorPointer = nil, ipv4addr: String? = nil) -> Bool {
         releaseAcceptSocket()
-        if let socket = Socket.tcpForListen(port: listenPort, error: error) {
+        if let socket = Socket.tcpForListen(port: listenPort, error: error, ipv4addr: ipv4addr) {
             acceptSocket = socket
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
                 while let socket = Socket.acceptClientSocket(self.acceptSocket) {

@@ -18,7 +18,7 @@ struct Socket {
         return NSError(domain: "SOCKET", code: Int(errorCode), userInfo: nil)
     }
 
-    static func tcpForListen(port: in_port_t = 8080, error:NSErrorPointer = nil) -> CInt? {
+    static func tcpForListen(port: in_port_t = 8080, error:NSErrorPointer = nil, ipv4addr: String? = nil) -> CInt? {
         let s = socket(AF_INET, SOCK_STREAM, 0)
         if ( s == -1 ) {
             if error != nil { error.memory = lastErr("socket(...) failed.") }
@@ -31,8 +31,12 @@ struct Socket {
             return nil
         }
         nosigpipe(s)
-        var addr = sockaddr_in(sin_len: __uint8_t(sizeof(sockaddr_in)), sin_family: sa_family_t(AF_INET),
-            sin_port: port_htons(port), sin_addr: in_addr(s_addr: inet_addr("0.0.0.0")), sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
+        var addr = sockaddr_in(
+          sin_len: __uint8_t(sizeof(sockaddr_in)),
+          sin_family: sa_family_t(AF_INET),
+          sin_port: port_htons(port),
+          sin_addr: in_addr(s_addr: inet_addr(ipv4addr ?? "0.0.0.0")),
+          sin_zero: (0, 0, 0, 0, 0, 0, 0, 0))
 
         var sock_addr = sockaddr(sa_len: 0, sa_family: 0, sa_data: (0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0))
         memcpy(&sock_addr, &addr, UInt(sizeof(sockaddr_in)))
