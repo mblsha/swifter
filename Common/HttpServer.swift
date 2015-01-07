@@ -65,9 +65,20 @@ public class HttpServer
     }
 
     func findHandler(url:String) -> (NSRegularExpression, Handler)? {
-        return filter(self.handlers, {
-            $0.0.numberOfMatchesInString(url, options: self.matchingOptions, range: HttpServer.asciiRange(url)) > 0
-        }).first
+        let matchingHandlers = self.handlers.map {
+            ($0, $0.0.rangeOfFirstMatchInString(
+                url,
+                options: self.matchingOptions,
+                range: HttpServer.asciiRange(url)))
+        }.filter {
+            $0.1.location != NSNotFound
+        }
+
+        let orderedHandlers = sorted(matchingHandlers) {
+            $0.1.length > $1.1.length
+        }
+
+        return orderedHandlers.first?.0
     }
 
     func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
