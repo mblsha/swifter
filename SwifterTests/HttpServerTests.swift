@@ -34,8 +34,8 @@ class HttpServerTests: XCTestCase {
     XCTAssertEqual(patternForUrl("/foo/bar"), "/foo/(.+?)")
     XCTAssertEqual(patternForUrl("/foo/bar/baz"), "/foo/(.+?)/(.+?)")
     XCTAssertEqual(patternForUrl("/foo/bar/baz/bar"), "/foo/(.+?)/(.+?)/bar")
-//    XCTAssertEqual(patternForUrl("/foo/пыщ/baz"), "/foo/(.+?)/(.+?)")
-//    XCTAssertEqual(patternForUrl("/foo/пыщ/baz/bar"), "/foo/(.+?)/(.+?)/bar")
+    XCTAssertEqual(patternForUrl("/foo/пыщ/baz"), "/foo/(.+?)/(.+?)")
+    XCTAssertEqual(patternForUrl("/foo/пыщ/baz/bar"), "/foo/(.+?)/(.+?)/bar")
   }
 
   func patternForUrl(url: String) -> String {

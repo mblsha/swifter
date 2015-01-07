@@ -69,7 +69,7 @@ public class HttpServer
             ($0, $0.0.rangeOfFirstMatchInString(
                 url,
                 options: self.matchingOptions,
-                range: HttpServer.asciiRange(url)))
+                range: HttpServer.stringRange(url)))
         }.filter {
             $0.1.location != NSNotFound
         }
@@ -83,7 +83,7 @@ public class HttpServer
 
     func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
         var capturedGroups = [String]()
-        if let result = expression.firstMatchInString(value, options: matchingOptions, range: HttpServer.asciiRange(value)) {
+        if let result = expression.firstMatchInString(value, options: matchingOptions, range: HttpServer.stringRange(value)) {
             let nsValue: NSString = value
             for var i = 1 ; i < result.numberOfRanges ; ++i {
                 if let group = nsValue.substringWithRange(result.rangeAtIndex(i)).stringByRemovingPercentEncoding {
@@ -94,8 +94,8 @@ public class HttpServer
         return capturedGroups
     }
 
-    class func asciiRange(value: String) -> NSRange {
-        return NSMakeRange(0, value.lengthOfBytesUsingEncoding(NSASCIIStringEncoding))
+    class func stringRange(value: String) -> NSRange {
+        return NSMakeRange(0, countElements(value))
     }
 
     class func writeResponse(socket: CInt, response: HttpResponse, keepAlive: Bool) {
