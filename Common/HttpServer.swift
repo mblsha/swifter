@@ -51,6 +51,7 @@ public class HttpServer
     }
 
     var handlers: [Route] = []
+    public var defaultHandler: Handler?
     var acceptSocket: CInt = -1
 
     public subscript (name: String) -> Handler? {
@@ -84,6 +85,8 @@ public class HttpServer
                                 let urlGroups = route.urlGroups(request.url)
                                 let updatedRequest = HttpRequest(url: request.url, urlGroups: urlGroups, urlParams: request.urlParams, method: request.method, headers: request.headers, body: request.body)
                                 HttpServer.writeResponse(socket, response: route.handler(updatedRequest), keepAlive: keepAlive)
+                            } else if let handler = self.defaultHandler {
+                                HttpServer.writeResponse(socket, response: handler(request), keepAlive: keepAlive)
                             } else {
                                 HttpServer.writeResponse(socket, response: HttpResponse.NotFound, keepAlive: keepAlive)
                             }
