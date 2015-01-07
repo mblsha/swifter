@@ -13,6 +13,15 @@ extension String {
     return NSMakeRange(0, countElements(self))
   }
 
+  var urlRangeWithoutParams: NSRange {
+    let questionMarkRange = (self as NSString).rangeOfCharacterFromSet(NSCharacterSet(charactersInString: "?"))
+    var result = fullRange
+    if questionMarkRange.location != NSNotFound {
+      result.length = questionMarkRange.location
+    }
+    return result
+  }
+
   func capturedGroups(expression: NSRegularExpression) -> [String] {
     var capturedGroups = [String]()
     if let result = expression.firstMatchInString(self, options: NSMatchingOptions(), range: fullRange) {

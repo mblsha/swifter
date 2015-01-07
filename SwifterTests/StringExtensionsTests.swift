@@ -15,6 +15,11 @@ class StringExtensionsTests: XCTestCase {
     XCTAssertEqual("пыщ".fullRange.length, 3)
   }
 
+  func testUrlRangeWithoutParams() {
+    XCTAssertEqual("foo?bar".urlRangeWithoutParams.length, 3)
+    XCTAssertEqual("пыщ?тыщ".urlRangeWithoutParams.length, 3)
+  }
+
   func testCapturedGroups() {
     XCTAssertEqual("foo/bar".capturedGroups(regexp("(.+)/(.+)")), ["foo", "bar"])
     XCTAssertEqual("foo/bar".capturedGroups(regexp("(.+)/(.+)/(.+)")), [])

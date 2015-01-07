@@ -57,7 +57,10 @@ class HttpServerTests: XCTestCase {
     XCTAssertEqual(routeForUrl("/foo/пыщ/baz"), "/foo/:p2/:p3")
     XCTAssertEqual(routeForUrl("/foo/пыщ/baz/bar"), "/foo/:p4/:p5/bar")
     XCTAssertEqual(routeForUrl("/fooo/bar"), "")
-  }
+
+    XCTAssertEqual(routeForUrl("/foo?bar=baz"), "/foo")
+    XCTAssertEqual(routeForUrl("/foo/пыщ/baz?bar=baz"), "/foo/:p2/:p3")
+}
 
   func routeForUrl(url: String) -> String {
     let result = server.findRoute(url)

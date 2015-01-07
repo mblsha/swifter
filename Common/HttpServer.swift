@@ -104,7 +104,7 @@ public class HttpServer
 
     func findRoute(url:String) -> Route? {
         return self.handlers.filter { route in
-            let urlRange = url.fullRange
+            let urlRange = url.urlRangeWithoutParams
             let matchRange = route.expression.rangeOfFirstMatchInString(
                 url,
                 options: NSMatchingOptions(),
