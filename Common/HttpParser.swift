@@ -25,9 +25,9 @@ public class HttpParser {
                 // 'multipart' -> Dictionary
                 if let contentSize = headers["content-length"]?.toInt() {
                     let body = socket.nextData(contentSize, error: error)
-                    return HttpRequest(url: path, urlParams: urlParams, method: method, headers: headers, body: body, capturedUrlGroups: [])
+                    return HttpRequest(url: path, urlGroups: [String:String](), urlParams: urlParams, method: method, headers: headers, body: body)
                 }
-                return HttpRequest(url: path, urlParams: urlParams, method: method, headers: headers, body: nil, capturedUrlGroups: [])
+                return HttpRequest(url: path, urlGroups: [String:String](), urlParams: urlParams, method: method, headers: headers, body: nil)
             }
         }
         return nil

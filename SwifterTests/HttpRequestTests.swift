@@ -11,7 +11,7 @@ import XCTest
 
 class HttpRequestTests: XCTestCase {
   func httpRequest(params: [(String,String)]) -> HttpRequest {
-    return HttpRequest(url: "", urlParams: params, method: "GET", headers: [String:String](), body: nil, capturedUrlGroups: [])
+    return HttpRequest(url: "", urlGroups: [String:String](), urlParams: params, method: "GET", headers: [String:String](), body: nil)
   }
 
   func testUrlParams() {

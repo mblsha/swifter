@@ -10,26 +10,61 @@ public class HttpServer
 {
     public typealias Handler = HttpRequest -> HttpResponse
 
-    var handlers: [(expression: NSRegularExpression, handler: Handler)] = []
+    struct Route {
+        let expression: NSRegularExpression
+        let name: String
+        let urlGroupNames: [String]
+        let handler: Handler
+
+        // uses Rails-like syntax for naming routes: ":groupName" will be
+        // added as a pattern that matches everything, except for forward slashes
+        init(name: String, handler: Handler) {
+            self.name = name
+            self.handler = handler
+
+            var pattern = name
+            let groupExpression = NSRegularExpression(pattern: ":(\\w+)", options: NSRegularExpressionOptions(), error: nil)!
+            self.urlGroupNames = []
+            while true {
+                let range = groupExpression.rangeOfFirstMatchInString(pattern, options: NSMatchingOptions(), range: pattern.fullRange)
+                if range.location != NSNotFound {
+                    let rangeWithoutColon = NSMakeRange(range.location + 1, range.length - 1)
+                    urlGroupNames.append((pattern as NSString).substringWithRange(rangeWithoutColon))
+                    pattern = (pattern as NSString).stringByReplacingCharactersInRange(range, withString: "([^/]+)")
+                } else {
+                    break
+                }
+            }
+
+            self.expression = NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions(), error: nil)!
+        }
+
+        func urlGroups(url: String) -> [String: String] {
+            var capturedGroups = url.capturedGroups(expression)
+            assert(capturedGroups.count == urlGroupNames.count)
+            var result = [String:String]()
+            for i in 0..<capturedGroups.count {
+                result[urlGroupNames[i]] = capturedGroups[i]
+            }
+            return result
+        }
+    }
+
+    var handlers: [Route] = []
     var acceptSocket: CInt = -1
 
-    let matchingOptions = NSMatchingOptions(0)
-    let expressionOptions = NSRegularExpressionOptions(0)
-
-    public subscript (path: String) -> Handler? {
+    public subscript (name: String) -> Handler? {
         get {
             return nil
         }
         set ( newValue ) {
-            if let regex = NSRegularExpression(pattern: path, options: expressionOptions, error: nil) {
-                if let newHandler = newValue {
-                    handlers.append(expression: regex, handler: newHandler)
-                }
+            if let newHandler = newValue {
+                handlers.append(Route(name: name, handler: newHandler))
             }
         }
     }
 
-    public func routes() -> [String] { return map(handlers, { $0.0.pattern }) }
+    public func routes() -> [String] { return map(handlers, { $0.name }) }
 
     public init() {
     }
@@ -45,10 +80,10 @@ public class HttpServer
                         let socketReader = SocketReader(socket: socket)
                         while let request = parser.nextHttpRequest(socketReader) {
                             let keepAlive = parser.supportsKeepAlive(request.headers)
-                            if let (expression, handler) = self.findHandler(request.url) {
-                                let capturedUrlsGroups = self.captureExpressionGroups(expression, value: request.url)
-                                let updatedRequest = HttpRequest(url: request.url, urlParams: request.urlParams, method: request.method, headers: request.headers, body: request.body, capturedUrlGroups: capturedUrlsGroups)
-                                HttpServer.writeResponse(socket, response: handler(updatedRequest), keepAlive: keepAlive)
+                            if let route = self.findRoute(request.url) {
+                                let urlGroups = route.urlGroups(request.url)
+                                let updatedRequest = HttpRequest(url: request.url, urlGroups: urlGroups, urlParams: request.urlParams, method: request.method, headers: request.headers, body: request.body)
+                                HttpServer.writeResponse(socket, response: route.handler(updatedRequest), keepAlive: keepAlive)
                             } else {
                                 HttpServer.writeResponse(socket, response: HttpResponse.NotFound, keepAlive: keepAlive)
                             }
@@ -64,33 +99,16 @@ public class HttpServer
         return false
     }
 
-    func findHandler(url:String) -> (NSRegularExpression, Handler)? {
-        return self.handlers.filter { (pattern, handler) in
-            let urlRange = HttpServer.stringRange(url)
-            let matchRange = pattern.rangeOfFirstMatchInString(
+    func findRoute(url:String) -> Route? {
+        return self.handlers.filter { route in
+            let urlRange = url.fullRange
+            let matchRange = route.expression.rangeOfFirstMatchInString(
                 url,
-                options: self.matchingOptions,
+                options: NSMatchingOptions(),
                 range: urlRange)
             return matchRange.location != NSNotFound &&
                    matchRange.length == urlRange.length
         }.first
-    }
-
-    func captureExpressionGroups(expression: NSRegularExpression, value: String) -> [String] {
-        var capturedGroups = [String]()
-        if let result = expression.firstMatchInString(value, options: matchingOptions, range: HttpServer.stringRange(value)) {
-            let nsValue: NSString = value
-            for var i = 1 ; i < result.numberOfRanges ; ++i {
-                if let group = nsValue.substringWithRange(result.rangeAtIndex(i)).stringByRemovingPercentEncoding {
-                    capturedGroups.append(group)
-                }
-            }
-        }
-        return capturedGroups
-    }
-
-    class func stringRange(value: String) -> NSRange {
-        return NSMakeRange(0, countElements(value))
     }
 
     class func writeResponse(socket: CInt, response: HttpResponse, keepAlive: Bool) {

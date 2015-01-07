@@ -10,7 +10,7 @@ public class HttpHandlers {
 
     class func directory(dir: String) -> ( HttpRequest -> HttpResponse ) {
         return { request in
-            if let localPath = request.capturedUrlGroups.first {
+            if let localPath = request.urlGroups["path"] {
                 let filesPath = dir.stringByExpandingTildeInPath.stringByAppendingPathComponent(localPath)
                 if let fileBody = NSData(contentsOfFile: filesPath) {
                     return HttpResponse.RAW(200, fileBody)
@@ -22,7 +22,7 @@ public class HttpHandlers {
 
     class func directoryBrowser(dir: String) -> ( HttpRequest -> HttpResponse ) {
         return { request in
-            if let pathFromUrl = request.capturedUrlGroups.first {
+            if let pathFromUrl = request.urlGroups["path"] {
                 let filePath = dir.stringByExpandingTildeInPath.stringByAppendingPathComponent(pathFromUrl)
                 let fileManager = NSFileManager.defaultManager()
                 var isDir: ObjCBool = false;

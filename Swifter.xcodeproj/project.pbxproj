@@ -9,6 +9,10 @@
 /* Begin PBXBuildFile section */
 		7906A4801A5ACEC600F6471E /* HttpResponseTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7906A47F1A5ACEC600F6471E /* HttpResponseTests.swift */; };
 		79203E201A5D8E7D00435662 /* HttpServerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79203E1F1A5D8E7D00435662 /* HttpServerTests.swift */; };
+		79203E221A5DA52400435662 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79203E211A5DA52400435662 /* String+Extensions.swift */; };
+		79203E241A5DA5D900435662 /* StringExtensionsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79203E231A5DA5D900435662 /* StringExtensionsTests.swift */; };
+		79203E251A5DA6A100435662 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79203E211A5DA52400435662 /* String+Extensions.swift */; };
+		79203E261A5DA6A200435662 /* String+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 79203E211A5DA52400435662 /* String+Extensions.swift */; };
 		797D66451A55584C0029671A /* HttpRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4815A19A2F6A60030B30D /* HttpRequest.swift */; };
 		797D66461A55584C0029671A /* HttpParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814A19A2EED00030B30D /* HttpParser.swift */; };
 		797D66471A55584C0029671A /* HttpResponse.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7CA4814B19A2EED00030B30D /* HttpResponse.swift */; };
@@ -84,6 +88,8 @@
 		7906A47A1A5AB5C000F6471E /* Swifter.podspec */ = {isa = PBXFileReference; lastKnownFileType = text; path = Swifter.podspec; sourceTree = "<group>"; };
 		7906A47F1A5ACEC600F6471E /* HttpResponseTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpResponseTests.swift; sourceTree = "<group>"; };
 		79203E1F1A5D8E7D00435662 /* HttpServerTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HttpServerTests.swift; sourceTree = "<group>"; };
+		79203E211A5DA52400435662 /* String+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Extensions.swift"; sourceTree = "<group>"; };
+		79203E231A5DA5D900435662 /* StringExtensionsTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = StringExtensionsTests.swift; sourceTree = "<group>"; };
 		797D66191A5554BA0029671A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		797D661A1A5554BA0029671A /* HttpParserTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HttpParserTests.swift; sourceTree = "<group>"; };
 		797D663A1A5557FA0029671A /* SwifterTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = SwifterTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -151,6 +157,7 @@
 				7906A47F1A5ACEC600F6471E /* HttpResponseTests.swift */,
 				79203E1F1A5D8E7D00435662 /* HttpServerTests.swift */,
 				797D66181A5554BA0029671A /* Supporting Files */,
+				79203E231A5DA5D900435662 /* StringExtensionsTests.swift */,
 			);
 			path = SwifterTests;
 			sourceTree = "<group>";
@@ -240,6 +247,7 @@
 				7CA4814D19A2EED00030B30D /* Socket.swift */,
 				79AB95A01A5A95B90082B805 /* SocketReader.swift */,
 				7CB102DC1A167FFA00CBA3B4 /* DemoServer.swift */,
+				79203E211A5DA52400435662 /* String+Extensions.swift */,
 			);
 			path = Common;
 			sourceTree = "<group>";
@@ -381,8 +389,10 @@
 				797D66461A55584C0029671A /* HttpParser.swift in Sources */,
 				797D664A1A55584C0029671A /* Socket.swift in Sources */,
 				797D664B1A5558AC0029671A /* HttpParserTests.swift in Sources */,
+				79203E221A5DA52400435662 /* String+Extensions.swift in Sources */,
 				79AB95A31A5A95B90082B805 /* SocketReader.swift in Sources */,
 				797D66491A55584C0029671A /* HttpServer.swift in Sources */,
+				79203E241A5DA5D900435662 /* StringExtensionsTests.swift in Sources */,
 				7906A4801A5ACEC600F6471E /* HttpResponseTests.swift in Sources */,
 				79203E201A5D8E7D00435662 /* HttpServerTests.swift in Sources */,
 				79AB959F1A5A91E50082B805 /* HttpRequestTests.swift in Sources */,
@@ -403,6 +413,7 @@
 				7C839B7619422CFF003A6950 /* ViewController.swift in Sources */,
 				7CA4815419A2EED00030B30D /* Socket.swift in Sources */,
 				7CA4815219A2EED00030B30D /* HttpServer.swift in Sources */,
+				79203E251A5DA6A100435662 /* String+Extensions.swift in Sources */,
 				7C8B262E1A238E6F00566475 /* SwifterDatabaseProxy.swift in Sources */,
 				7C8B262B1A238E2F00566475 /* SwifterSQLiteDatabaseProxy.swift in Sources */,
 				7CA4814E19A2EED00030B30D /* HttpParser.swift in Sources */,
@@ -416,6 +427,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7CA4815119A2EED00030B30D /* HttpResponse.swift in Sources */,
+				79203E261A5DA6A200435662 /* String+Extensions.swift in Sources */,
 				79AB95A21A5A95B90082B805 /* SocketReader.swift in Sources */,
 				7CB102DE1A1680EA00CBA3B4 /* DemoServer.swift in Sources */,
 				7CA4814F19A2EED00030B30D /* HttpParser.swift in Sources */,

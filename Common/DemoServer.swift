@@ -11,7 +11,7 @@ public func demoServer(publicDir: String?) -> HttpServer {
     if let publicDir = publicDir {
         server["/resources/(.+)"] = HttpHandlers.directory(publicDir)
     }
-    server["/files(.+)"] = HttpHandlers.directoryBrowser("~/")
+    server["/files/:path"] = HttpHandlers.directoryBrowser("~/")
     server["/magic"] = { .OK(.HTML("You asked for " + $0.url)) }
     server["/test"] = { request in
         var headersInfo = ""
@@ -24,10 +24,13 @@ public func demoServer(publicDir: String?) -> HttpServer {
         }
         return .OK(.HTML("<h3>Url:</h3> \(request.url)<h3>Method: \(request.method)</h3><h3>Headers:</h3>\(headersInfo)<h3>Query:</h3>\(queryParamsInfo)"))
     }
-    server["/params/(.+)/(.+)"] = { request in
+    server["/params/:index/:group"] = { request in
         var capturedGroups = ""
-        for (index, group) in enumerate(request.capturedUrlGroups) {
-            capturedGroups += "Expression group \(index) : \(group)<br>"
+        if let index = request.urlGroups["index"] {
+            capturedGroups += "index: \(index)<br>"
+        }
+        if let group = request.urlGroups["group"] {
+            capturedGroups += "group: \(group)<br>"
         }
         return .OK(.HTML("Url: \(request.url)<br>Method: \(request.method)<br>\(capturedGroups)"))
     }
