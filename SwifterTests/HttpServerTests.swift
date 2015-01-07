@@ -19,9 +19,9 @@ class HttpServerTests: XCTestCase {
       return .InternalServerError
     }
     server["/foo"] = handleRequest
-    server["/foo/(.+?)"] = handleRequest
-    server["/foo/(.+?)/(.+?)"] = handleRequest
-    server["/foo/(.+?)/(.+?)/bar"] = handleRequest
+    server["/foo/([^/]+)"] = handleRequest
+    server["/foo/([^/]+)/([^/]+)"] = handleRequest
+    server["/foo/([^/]+)/([^/]+)/bar"] = handleRequest
   }
 
   override func tearDown() {
@@ -31,11 +31,12 @@ class HttpServerTests: XCTestCase {
 
   func testRouting() {
     XCTAssertEqual(patternForUrl("/foo"), "/foo")
-    XCTAssertEqual(patternForUrl("/foo/bar"), "/foo/(.+?)")
-    XCTAssertEqual(patternForUrl("/foo/bar/baz"), "/foo/(.+?)/(.+?)")
-    XCTAssertEqual(patternForUrl("/foo/bar/baz/bar"), "/foo/(.+?)/(.+?)/bar")
-    XCTAssertEqual(patternForUrl("/foo/пыщ/baz"), "/foo/(.+?)/(.+?)")
-    XCTAssertEqual(patternForUrl("/foo/пыщ/baz/bar"), "/foo/(.+?)/(.+?)/bar")
+    XCTAssertEqual(patternForUrl("/foo/bar"), "/foo/([^/]+)")
+    XCTAssertEqual(patternForUrl("/foo/bar/baz"), "/foo/([^/]+)/([^/]+)")
+    XCTAssertEqual(patternForUrl("/foo/bar/baz/bar"), "/foo/([^/]+)/([^/]+)/bar")
+    XCTAssertEqual(patternForUrl("/foo/пыщ/baz"), "/foo/([^/]+)/([^/]+)")
+    XCTAssertEqual(patternForUrl("/foo/пыщ/baz/bar"), "/foo/([^/]+)/([^/]+)/bar")
+    XCTAssertEqual(patternForUrl("/fooo/bar"), "")
   }
 
   func patternForUrl(url: String) -> String {
