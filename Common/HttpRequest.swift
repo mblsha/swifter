@@ -9,7 +9,7 @@ import LlamaKit
 
 public struct HttpRequest {
     public let url: String
-    public let urlGroups: [String: String]
+    private let urlGroups: [String: String]
     public let urlParams: [(String, String)] // http://stackoverflow.com/questions/1746507/authoritative-position-of-duplicate-http-get-query-keys
     public let method: String
     public let headers: [String: String]
@@ -24,6 +24,15 @@ public struct HttpRequest {
       }
     }
 
+  init(url: String, urlGroups: [String:String], urlParams: [(String, String)], method: String, headers: [String:String], body: NSData?) {
+    self.url = url
+    self.urlGroups = urlGroups
+    self.urlParams = urlParams
+    self.method = method
+    self.headers = headers
+    self.body = body
+  }
+
     private struct Constants {
       static let HttpRequestDomain = "HttpRequestDomain"
 
@@ -31,6 +40,16 @@ public struct HttpRequest {
         case ParameterNotFound = 0
         case ParameterIntConversionFailed = 1
         case UrlGroupNotFound = 2
+      }
+    }
+
+    public func urlGroup(name: String) -> Result<String> {
+      if let result = urlGroups[name] {
+        return success(result)
+      } else {
+        return failure(NSError(domain: Constants.HttpRequestDomain,
+                               code: Constants.ErrorCode.UrlGroupNotFound.rawValue,
+                               userInfo: ["message": "Url Group '\(name)' not found in \(url)"]))
       }
     }
 
