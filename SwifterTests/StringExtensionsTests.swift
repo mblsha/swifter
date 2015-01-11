@@ -13,6 +13,9 @@ class StringExtensionsTests: XCTestCase {
   func testFullRange() {
     XCTAssertEqual("foo".fullRange.length, 3)
     XCTAssertEqual("пыщ".fullRange.length, 3)
+    let victory = "✌️"
+    XCTAssertEqual(victory.fullRange.length, 2)
+    XCTAssertEqual((victory as NSString).substringWithRange(victory.fullRange), victory)
   }
 
   func testUrlRangeWithoutParams() {

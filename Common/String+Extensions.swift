@@ -10,7 +10,7 @@ import Foundation
 
 extension String {
   var fullRange: NSRange {
-    return NSMakeRange(0, countElements(self))
+    return NSMakeRange(0, (self as NSString).length)
   }
 
   var urlRangeWithoutParams: NSRange {
@@ -25,9 +25,8 @@ extension String {
   func capturedGroups(expression: NSRegularExpression) -> [String] {
     var capturedGroups = [String]()
     if let result = expression.firstMatchInString(self, options: NSMatchingOptions(), range: fullRange) {
-      let nsValue: NSString = self
       for var i = 1 ; i < result.numberOfRanges ; ++i {
-        let group = nsValue.substringWithRange(result.rangeAtIndex(i))
+        let group = (self as NSString).substringWithRange(result.rangeAtIndex(i))
         capturedGroups.append(group)
       }
     }
