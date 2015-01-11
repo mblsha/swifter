@@ -47,4 +47,16 @@ public struct HttpRequest {
                                userInfo: ["message": "Parameter '\(name)' not found"]))
       }
     }
+
+    public func intParam(name: String) -> Result<Int> {
+      return param(name).flatMap { value in
+        if let int = value.toInt() {
+          return success(int)
+        } else {
+          return failure(NSError(domain: Constants.HttpRequestDomain,
+                                 code: 1,
+                                 userInfo: ["message": "Unable to convert \(name)=\(value) to int"]))
+        }
+      }
+    }
 }
