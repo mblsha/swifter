@@ -27,9 +27,8 @@ extension String {
     if let result = expression.firstMatchInString(self, options: NSMatchingOptions(), range: fullRange) {
       let nsValue: NSString = self
       for var i = 1 ; i < result.numberOfRanges ; ++i {
-        if let group = nsValue.substringWithRange(result.rangeAtIndex(i)).stringByRemovingPercentEncoding {
-          capturedGroups.append(group)
-        }
+        let group = nsValue.substringWithRange(result.rangeAtIndex(i))
+        capturedGroups.append(group)
       }
     }
     return capturedGroups
