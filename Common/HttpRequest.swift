@@ -5,6 +5,7 @@
 //
 
 import Foundation
+import LlamaKit
 
 public struct HttpRequest {
     public let url: String
@@ -23,6 +24,10 @@ public struct HttpRequest {
       }
     }
 
+    private struct Constants {
+      static let HttpRequestDomain = "HttpRequestDomain"
+    }
+
     public func params(name: String) -> [String] {
       return reduce(urlParams, []) {
         if $1.0 == name {
@@ -33,7 +38,13 @@ public struct HttpRequest {
       }
     }
 
-    public func param(name: String) -> String? {
-      return params(name).first
+    public func param(name: String) -> Result<String> {
+      if let result = params(name).first {
+        return success(result)
+      } else {
+        return failure(NSError(domain: Constants.HttpRequestDomain,
+                               code: 0,
+                               userInfo: ["message": "Parameter '\(name)' not found"]))
+      }
     }
 }

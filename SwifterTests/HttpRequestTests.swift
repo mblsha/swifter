@@ -15,9 +15,9 @@ class HttpRequestTests: XCTestCase {
   }
 
   func testUrlParams() {
-    XCTAssertEqual(httpRequest([("foo", "bar")]).param("foo")!, "bar")
-    XCTAssert(httpRequest([("foo", "bar")]).param("baz") == nil)
-    XCTAssertEqual(httpRequest([("foo", "bar"), ("foo", "baz")]).param("foo")!, "bar")
+    XCTAssertEqual(httpRequest([("foo", "bar")]).param("foo").value()!, "bar")
+    XCTAssertFalse(httpRequest([("foo", "bar")]).param("baz").isSuccess())
+    XCTAssertEqual(httpRequest([("foo", "bar"), ("foo", "baz")]).param("foo").value()!, "bar")
     XCTAssertEqual(httpRequest([("foo", "bar"), ("foo", "baz")]).params("foo"), ["bar", "baz"])
   }
 }
