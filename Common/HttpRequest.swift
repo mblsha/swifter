@@ -26,6 +26,12 @@ public struct HttpRequest {
 
     private struct Constants {
       static let HttpRequestDomain = "HttpRequestDomain"
+
+      enum ErrorCode: Int {
+        case ParameterNotFound = 0
+        case ParameterIntConversionFailed = 1
+        case UrlGroupNotFound = 2
+      }
     }
 
     public func params(name: String) -> [String] {
@@ -43,7 +49,7 @@ public struct HttpRequest {
         return success(result)
       } else {
         return failure(NSError(domain: Constants.HttpRequestDomain,
-                               code: 0,
+                               code: Constants.ErrorCode.ParameterNotFound.rawValue,
                                userInfo: ["message": "Parameter '\(name)' not found"]))
       }
     }
@@ -54,7 +60,7 @@ public struct HttpRequest {
           return success(int)
         } else {
           return failure(NSError(domain: Constants.HttpRequestDomain,
-                                 code: 1,
+                                 code: Constants.ErrorCode.ParameterIntConversionFailed.rawValue,
                                  userInfo: ["message": "Unable to convert \(name)=\(value) to int"]))
         }
       }
