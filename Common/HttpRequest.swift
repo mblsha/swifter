@@ -50,7 +50,7 @@ public struct HttpRequest {
       } else {
         return failure(NSError(domain: Constants.HttpRequestDomain,
                                code: Constants.ErrorCode.ParameterNotFound.rawValue,
-                               userInfo: ["message": "Parameter '\(name)' not found"]))
+                               userInfo: ["message": "Parameter '\(name)' not found in \(url)"]))
       }
     }
 
@@ -61,7 +61,7 @@ public struct HttpRequest {
         } else {
           return failure(NSError(domain: Constants.HttpRequestDomain,
                                  code: Constants.ErrorCode.ParameterIntConversionFailed.rawValue,
-                                 userInfo: ["message": "Unable to convert \(name)=\(value) to int"]))
+                                 userInfo: ["message": "Unable to convert \(name)=\(value) to Int in \(self.url)"]))
         }
       }
     }
