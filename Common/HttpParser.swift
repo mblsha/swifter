@@ -33,7 +33,7 @@ public class HttpParser {
         return nil
     }
 
-    class func extractUrlParams(url: String) -> [(String, String)] {
+    public class func extractUrlParams(url: String) -> [(String, String)] {
         if url.rangeOfCharacterFromSet(NSCharacterSet(charactersInString: "?")) == nil {
             return []
         }

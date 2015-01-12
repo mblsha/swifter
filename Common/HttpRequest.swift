@@ -24,7 +24,7 @@ public struct HttpRequest {
       }
     }
 
-  init(url: String, urlGroups: [String:String], urlParams: [(String, String)], method: String, headers: [String:String], body: NSData?) {
+  public init(url: String, urlGroups: [String:String], urlParams: [(String, String)], method: String, headers: [String:String], body: NSData?) {
     self.url = url
     self.urlGroups = urlGroups
     self.urlParams = urlParams
