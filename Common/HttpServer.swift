@@ -81,15 +81,8 @@ public class HttpServer
                         let socketReader = SocketReader(socket: socket)
                         while let request = parser.nextHttpRequest(socketReader) {
                             let keepAlive = parser.supportsKeepAlive(request.headers)
-                            if let route = self.findRoute(request.url) {
-                                let urlGroups = route.urlGroups(request.url)
-                                let updatedRequest = HttpRequest(url: request.url, urlGroups: urlGroups, urlParams: request.urlParams, method: request.method, headers: request.headers, body: request.body)
-                                HttpServer.writeResponse(socket, response: route.handler(updatedRequest), keepAlive: keepAlive)
-                            } else if let handler = self.defaultHandler {
-                                HttpServer.writeResponse(socket, response: handler(request), keepAlive: keepAlive)
-                            } else {
-                                HttpServer.writeResponse(socket, response: HttpResponse.NotFound, keepAlive: keepAlive)
-                            }
+                            let response = self.responseForRequest(request)
+                            HttpServer.writeResponse(socket, response: response, keepAlive: keepAlive)
                             if !keepAlive { break }
                         }
                         Socket.release(socket)
@@ -100,6 +93,18 @@ public class HttpServer
             return true
         }
         return false
+    }
+
+    public func responseForRequest(request: HttpRequest) -> HttpResponse {
+        if let route = self.findRoute(request.url) {
+            let urlGroups = route.urlGroups(request.url)
+            let updatedRequest = HttpRequest(url: request.url, urlGroups: urlGroups, urlParams: request.urlParams, method: request.method, headers: request.headers, body: request.body)
+            return route.handler(updatedRequest)
+        } else if let handler = self.defaultHandler {
+            return handler(request)
+        } else {
+            return HttpResponse.NotFound
+        }
     }
 
     func findRoute(url:String) -> Route? {
