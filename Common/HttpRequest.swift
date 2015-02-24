@@ -18,7 +18,7 @@ public struct HttpRequest {
     public var bodyUtf8: String? {
       get {
         if let data = body {
-          return NSString(data: data, encoding: NSUTF8StringEncoding)
+          return NSString(data: data, encoding: NSUTF8StringEncoding) as? String
         }
         return nil
       }
@@ -43,7 +43,7 @@ public struct HttpRequest {
       }
     }
 
-    public func urlGroup(name: String) -> Result<String> {
+    public func urlGroup(name: String) -> Result<String, NSError> {
       if let result = urlGroups[name] {
         return success(result)
       } else {
@@ -63,7 +63,7 @@ public struct HttpRequest {
       }
     }
 
-    public func param(name: String) -> Result<String> {
+    public func param(name: String) -> Result<String, NSError> {
       if let result = params(name).first {
         return success(result)
       } else {
@@ -73,7 +73,7 @@ public struct HttpRequest {
       }
     }
 
-    public func intParam(name: String) -> Result<Int> {
+    public func intParam(name: String) -> Result<Int, NSError> {
       return param(name).flatMap { value in
         if let int = value.toInt() {
           return success(int)

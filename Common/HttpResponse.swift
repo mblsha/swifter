@@ -45,14 +45,13 @@ public enum HttpResponseBody {
             if NSPropertyListSerialization.propertyList(object, isValidForFormat: format) {
                 var serializationError: NSError?
                 if let plist = NSPropertyListSerialization.dataWithPropertyList(object, format: format, options: 0, error: &serializationError) {
-                    return NSString(data: plist, encoding: NSUTF8StringEncoding)
+                    return NSString(data: plist, encoding: NSUTF8StringEncoding) as? String
                 }
                 return "Serialisation error: \(serializationError)"
             }
             return "Invalid object to serialise."
         case .RAW(_, _):
             fatalError("Use data() for .RAW HttpResponse")
-            return nil
         case .HTML(let body):
             return "<html><body>\(body)</body></html>"
         }

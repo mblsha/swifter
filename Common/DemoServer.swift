@@ -26,10 +26,10 @@ public func demoServer(publicDir: String?) -> HttpServer {
     }
     server["/params/:index/:group"] = { request in
         var capturedGroups = ""
-        if let index = request.urlGroup("index").value() {
+        if let index = request.urlGroup("index").value {
             capturedGroups += "index: \(index)<br>"
         }
-        if let group = request.urlGroup("group").value() {
+        if let group = request.urlGroup("group").value {
             capturedGroups += "group: \(group)<br>"
         }
         return .OK(.HTML("Url: \(request.url)<br>Method: \(request.method)<br>\(capturedGroups)"))

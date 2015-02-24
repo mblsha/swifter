@@ -1,10 +1,10 @@
 PODS:
-  - LlamaKit (0.1.0)
+  - LlamaKit (0.6.0)
 
 DEPENDENCIES:
   - LlamaKit
 
 SPEC CHECKSUMS:
-  LlamaKit: 71673af25b2c733160d643e67c1f711d3afa4af2
+  LlamaKit: 9cf3b42d555d1a268d156fe355f8751c4a66711a
 
 COCOAPODS: 0.35.0

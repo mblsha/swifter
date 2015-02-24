@@ -24,17 +24,18 @@ public class HttpServer
 
             var pattern = name
             let groupExpression = NSRegularExpression(pattern: ":(\\w+)", options: NSRegularExpressionOptions(), error: nil)!
-            self.urlGroupNames = []
+            var tempGroupNames = [String]()
             while true {
                 let range = groupExpression.rangeOfFirstMatchInString(pattern, options: NSMatchingOptions(), range: pattern.fullRange)
                 if range.location != NSNotFound {
                     let rangeWithoutColon = NSMakeRange(range.location + 1, range.length - 1)
-                    urlGroupNames.append((pattern as NSString).substringWithRange(rangeWithoutColon))
+                    tempGroupNames.append((pattern as NSString).substringWithRange(rangeWithoutColon))
                     pattern = (pattern as NSString).stringByReplacingCharactersInRange(range, withString: "([^/]+)")
                 } else {
                     break
                 }
             }
+            self.urlGroupNames = tempGroupNames
 
             self.expression = NSRegularExpression(pattern: pattern, options: NSRegularExpressionOptions(), error: nil)!
         }

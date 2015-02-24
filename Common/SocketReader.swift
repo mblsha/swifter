@@ -23,7 +23,7 @@ class SocketReader {
   // result == -1 on error
   func nextUInt8() -> Int {
     var buffer = [UInt8](count: 1, repeatedValue: 0);
-    let next = recv(socket!, &buffer, UInt(buffer.count), 0)
+    let next = recv(socket!, &buffer, buffer.count, 0)
     if next <= 0 { return next }
     return Int(buffer[0])
   }
@@ -74,7 +74,7 @@ class SocketReader {
 
   func nextLine(error: NSErrorPointer) -> String? {
     if let data = nextRawLine(error) {
-      return NSString(data: data, encoding: NSUTF8StringEncoding)!
+      return NSString(data: data, encoding: NSUTF8StringEncoding) as? String
     } else {
       return nil
     }

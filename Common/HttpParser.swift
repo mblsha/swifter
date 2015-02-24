@@ -10,7 +10,7 @@ public class HttpParser {
 
     func nextHttpRequest(socket: SocketReader, error:NSErrorPointer = nil) -> HttpRequest? {
         if let statusLine = socket.nextLine(error) {
-            let statusTokens = split(statusLine, { $0 == " " })
+            let statusTokens = split(statusLine, isSeparator: { $0 == " " })
             if ( statusTokens.count < 3 ) {
                 if error != nil { error.memory = SocketReader.err("Invalid status line: \(statusLine)") }
                 return nil
@@ -37,9 +37,9 @@ public class HttpParser {
         if url.rangeOfCharacterFromSet(NSCharacterSet(charactersInString: "?")) == nil {
             return []
         }
-        if let query = split(url, { $0 == "?" }).last {
-            return map(split(query, { $0 == "&" }), { (param:String) -> (String, String) in
-                let tokens = split(param, { $0 == "=" })
+        if let query = split(url, isSeparator: { $0 == "?" }).last {
+            return map(split(query, isSeparator: { $0 == "&" }), { (param:String) -> (String, String) in
+                let tokens = split(param, isSeparator: { $0 == "=" })
                 if tokens.count >= 2 {
                     let key = tokens[0].stringByRemovingPercentEncoding
                     let value = tokens[1].stringByRemovingPercentEncoding
@@ -57,7 +57,7 @@ public class HttpParser {
             if ( headerLine.isEmpty ) {
                 return headers
             }
-            let headerTokens = split(headerLine, { $0 == ":" })
+            let headerTokens = split(headerLine, isSeparator: { $0 == ":" })
             if ( headerTokens.count >= 2 ) {
                 // RFC 2616 - "Hypertext Transfer Protocol -- HTTP/1.1", paragraph 4.2, "Message Headers":
                 // "Each header field consists of a name followed by a colon (":") and the field value. Field names are case-insensitive."
