@@ -58,9 +58,16 @@ func ==(lhs: Params, rhs: Params) -> Bool {
   return true
 }
 
+// FIXME: rdar://19935413
+func swift12sucks(str: String) -> String {
+  // dumb Xcode 6.3b2 work-around, where it joins by "\n\r"
+  // instead of "\r\n"
+  return str.stringByReplacingOccurrencesOfString("\n\r", withString: "\r\n")
+}
+
 func httpRequestText(statusLine: String, headerLines: [String], optionalBodyText: String? = nil) -> String {
-  let prefix = "\(statusLine) HTTP/1.1\r\n" +
-               join("\r\n", headerLines)
+  let prefix = swift12sucks("\(statusLine) HTTP/1.1\r\n" +
+                            join("\r\n", headerLines))
   let bodySeparator = "\r\n\r\n"
 
   if let bodyText = optionalBodyText {
@@ -77,7 +84,7 @@ func httpRequestText(statusLine: String, headerLines: [String], optionalBodyText
 }
 
 func mockReader(requests: [String]) -> MockSocketReader {
-  return MockSocketReader(data: join("", requests))
+  return MockSocketReader(data: swift12sucks(join("", requests)))
 }
 
 class HttpParserTests: XCTestCase {

@@ -74,7 +74,11 @@ class SocketReader {
 
   func nextLine(error: NSErrorPointer) -> String? {
     if let data = nextRawLine(error) {
-      return NSString(data: data, encoding: NSUTF8StringEncoding) as? String
+      if let utf8 = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
+        return utf8
+      } else {
+        return NSString(data: data, encoding: NSASCIIStringEncoding)! as String
+      }
     } else {
       return nil
     }
