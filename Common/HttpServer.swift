@@ -77,6 +77,8 @@ public class HttpServer
             acceptSocket = socket
             dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
                 while let socket = Socket.acceptClientSocket(self.acceptSocket) {
+                    // TODO: use dispatch_source from DeferredTCPSocket:
+                    // https://github.com/bignerdranch/DeferredTCPSocket/blob/master/DeferredTCPSocket/DeferredTCPSocket/TCPAcceptSocket.swift
                     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_BACKGROUND, 0), {
                         let parser = HttpParser()
                         let socketReader = SocketReader(socket: socket)

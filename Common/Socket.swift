@@ -6,6 +6,9 @@
 
 import Foundation
 
+// TODO: Look at DeferredTCPSocket
+// https://github.com/bignerdranch/DeferredTCPSocket/blob/master/DeferredTCPSocket/DeferredTCPSocket/TCPAcceptSocket.swift
+
 /* Low level routines for POSIX sockets */
 
 struct Socket {
